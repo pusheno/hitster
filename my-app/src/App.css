@@ -1,0 +1,51 @@
+.App-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.controls button {
+  margin: 5px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  background: #444;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.controls button:hover {
+  background: #666;
+}
+
+.scanner-box {
+  width: 100%;
+  max-width: 400px;
+  border: 3px solid #00ff88;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 15px;
+}
+
+.result, .history {
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.history ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.history li {
+  background: #222;
+  margin: 4px 0;
+  padding: 8px;
+  border-radius: 8px;
+  color: #00ffcc;
+  word-break: break-all;
+}
