@@ -31,7 +31,7 @@ function App() {
       audioObj.currentTime = 0;
     }
 
-    const audio = new Audio(`/hitster/audio/${songName}.mp3`); // <<< ważne: /hitster/
+    const audio = new Audio(`/hitster/public/audio/${songName}.mp3`); // <<< ważne: /hitster/
     audio.loop = false;
 
     audio.play().catch((err) => {
