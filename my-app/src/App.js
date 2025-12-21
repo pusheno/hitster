@@ -2,72 +2,59 @@ import { useState } from "react";
 import { Scanner } from "@yudiel/react-qr-scanner";
 import "./App.css";
 
-/* ===== AUDIO UNLOCK (iOS / Safari) ===== */
-let audioUnlocked = false;
-
-const unlockAudio = () => {
-  if (audioUnlocked) return;
-
-  // 1-ms cichy dźwięk (standardowy hack)
-  const audio = new Audio(
-    "data:audio/mp3;base64,//uQxAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQCA..."
-  );
-
-  audio.play()
-    .then(() => {
-      audioUnlocked = true;
-      console.log("🔓 Audio unlocked");
-    })
-    .catch(() => {});
-};
-/* ===================================== */
-
 function App() {
   const [cameraActive, setCameraActive] = useState(false);
   const [permissionAsked, setPermissionAsked] = useState(false);
-  const [currentSong, setCurrentSong] = useState(null);
-  const [audioObj, setAudioObj] = useState(null);
 
-  /* Start skanera — JEDYNY klik użytkownika */
+  const [currentSong, setCurrentSong] = useState(null); // aktualnie odtwarzana piosenka
+  const [pendingSong, setPendingSong] = useState(null); // piosenka znaleziona, czeka na odtwarzanie
+  const [audioObj, setAudioObj] = useState(null); // obiekt Audio
+
+  // Uruchom skaner po pierwszym tapnięciu (wymagane na iOS)
   const startScanner = () => {
-    unlockAudio();              // 👈 KLUCZ
     setCameraActive(true);
     setPermissionAsked(true);
   };
 
-  /* Po zeskanowaniu QR */
+  // Po zeskanowaniu kodu QR
   const handleScan = (results) => {
     if (results?.length > 0) {
       const qrValue = results[0]?.rawValue?.trim();
-
-      if (qrValue && qrValue !== currentSong) {
-        playSong(qrValue);
+      if (qrValue && qrValue !== currentSong && qrValue !== pendingSong) {
+        setPendingSong(qrValue);
+        setCameraActive(false); // chowamy skaner
       }
     }
   };
 
-  /* Odtwarzanie */
+  // Odtwarzanie utworu (wywoływane tylko po tapnięciu w przycisk)
   const playSong = (songName) => {
+    // Zatrzymaj poprzedni utwór, jeśli był
     if (audioObj) {
       audioObj.pause();
       audioObj.currentTime = 0;
     }
 
-    const audio = new Audio(
-      `${import.meta.env.BASE_URL}audio/${songName}.mp3`
-    );
+    const audio = new Audio(`/audio/${songName}.mp3`);
     audio.loop = false;
 
     audio.play().catch((err) => {
-      alert("Nie udało się odtworzyć: " + err.message);
+      alert("Nie udało się odtworzyć piosenki: " + err.message);
     });
 
     setAudioObj(audio);
     setCurrentSong(songName);
-    setCameraActive(false);
+    setPendingSong(null); // już nie czeka
   };
 
-  /* Stop i powrót do skanera */
+  // Przycisk „Odtwórz” – uruchamia odtwarzanie
+  const startPlaying = () => {
+    if (pendingSong) {
+      playSong(pendingSong);
+    }
+  };
+
+  // Zatrzymaj odtwarzanie i wróć do skanera
   const stopAndReturn = () => {
     if (audioObj) {
       audioObj.pause();
@@ -75,7 +62,8 @@ function App() {
       setAudioObj(null);
     }
     setCurrentSong(null);
-    setCameraActive(true);
+    setPendingSong(null);
+    setCameraActive(true); // wracamy do skanera
   };
 
   return (
@@ -83,7 +71,7 @@ function App() {
       <header className="App-header">
         <h1>Czytnik QR → Odtwarzacz 2</h1>
 
-        {/* Ekran startowy */}
+        {/* Ekran startowy – wymagany gest na iOS */}
         {!permissionAsked && (
           <div className="start-screen">
             <p>Naciśnij przycisk, aby uruchomić skaner</p>
@@ -94,7 +82,7 @@ function App() {
         )}
 
         {/* Tryb skanowania */}
-        {permissionAsked && !currentSong && cameraActive && (
+        {permissionAsked && !currentSong && !pendingSong && cameraActive && (
           <>
             <div className="scanner-box">
               <Scanner
@@ -105,22 +93,37 @@ function App() {
                 }}
               />
             </div>
-            <p className="info">
-              Nakieruj kamerę na kod QR z nazwą piosenki
-            </p>
+            <p className="info">Nakieruj kamerę na kod QR z nazwą piosenki</p>
           </>
         )}
 
-        {/* Tryb odtwarzania */}
-        {currentSong && (
+        {/* Ekran po zeskanowaniu – czekanie na odtwarzanie lub odtwarzanie */}
+        {(pendingSong || currentSong) && (
           <div className="player-screen">
-            <h2>Teraz gra:</h2>
-            <h3 style={{ wordBreak: "break-all", margin: "20px 0" }}>
-              {currentSong}
+            <h2>{currentSong ? "Teraz gra:" : "Znaleziona piosenka:"}</h2>
+            <h3
+              style={{
+                wordBreak: "break-all",
+                margin: "20px 0",
+                fontSize: "1.8em",
+              }}
+            >
+              {pendingSong || currentSong}
             </h3>
-            <button className="stop-btn" onClick={stopAndReturn}>
-              Stop i wróć do skanera
-            </button>
+
+            {/* Przycisk Odtwórz – widoczny tylko gdy jeszcze nie gra */}
+            {pendingSong && (
+              <button className="big-play-btn" onClick={startPlaying}>
+                Odtwórz ▶
+              </button>
+            )}
+
+            {/* Przycisk Stop – widoczny tylko gdy już gra */}
+            {currentSong && (
+              <button className="stop-btn" onClick={stopAndReturn}>
+                Stop i wróć do skanera
+              </button>
+            )}
           </div>
         )}
       </header>
