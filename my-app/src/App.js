@@ -81,7 +81,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Czytnik QR → Odtwarzacz</h1>
+        <h1>Czytnik QR → Odtwarzacz 2</h1>
 
         {/* Ekran startowy */}
         {!permissionAsked && (
