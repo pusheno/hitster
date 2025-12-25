@@ -26,22 +26,23 @@ function App() {
   };
 
   const playSong = (songName) => {
-    if (audioObj) {
-      audioObj.pause();
-      audioObj.currentTime = 0;
-    }
+  if (audioObj) {
+    audioObj.pause();
+    audioObj.currentTime = 0;
+  }
 
-    const audio = new Audio(`/hitster/public/audio/${songName}.mp3`); // <<< ważne: /hitster/
-    audio.loop = false;
+  const audio = new Audio(
+    `${process.env.PUBLIC_URL}/audio/${songName}.mp3`
+  );
 
-    audio.play().catch((err) => {
-      alert("Nie udało się odtworzyć piosenki: " + err.message);
-    });
+  audio.play().catch(err => {
+    alert("Nie udało się odtworzyć piosenki: " + err.message);
+  });
 
-    setAudioObj(audio);
-    setCurrentSong(songName);
-    setPendingSong(null);
-  };
+  setAudioObj(audio);
+  setCurrentSong(songName);
+  setPendingSong(null);
+};
 
   const startPlaying = () => {
     if (pendingSong) {
