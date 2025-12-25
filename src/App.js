@@ -61,16 +61,15 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className="app-container">
       <header className="App-header">
-        <h1>Czytnik QR → Odtwarzacz</h1>
 
         {!permissionAsked && (
           <div className="start-screen">
-            <p>Naciśnij przycisk, aby uruchomić skaner</p>
-            <button className="big-start-btn" onClick={startScanner}>
-              Uruchom skaner
-            </button>
+            <div className="start-btn-container">
+              <button onClick={startScanner} className="start-btn">
+              </button>
+            </div>
           </div>
         )}
 
@@ -85,7 +84,6 @@ function App() {
                 }}
               />
             </div>
-            <p className="info">Nakieruj kamerę na kod QR z nazwą piosenki</p>
           </>
         )}
 
