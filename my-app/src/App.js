@@ -35,7 +35,13 @@ function App() {
       audioObj.currentTime = 0;
     }
 
-    const audio = new Audio(`/audio/${songName}.mp3`);
+    const songs = {
+    song321: "https://www.dropbox.com/scl/fi/p514t4jpshw1qum1ggyqq/song321.mp3?raw=1",
+    song323: "https://www.dropbox.com/scl/fi/bu18q2qkq2vdixe70liyt/song323.mp3?raw=1",
+    };
+    
+    //const audio = new Audio(`/audio/${songName}.mp3`);
+    const audio = new Audio(songs[songName]);
     audio.loop = false;
 
     audio.play().catch((err) => {
