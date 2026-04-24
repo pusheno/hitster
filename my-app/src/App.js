@@ -74,7 +74,8 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className="App cwel">
+    cwel
       <header className="App-header">
         <h1>Czytnik QR → Odtwarzacz 3</h1>
 
@@ -121,7 +122,7 @@ function App() {
             {/* Przycisk Odtwórz – widoczny tylko gdy jeszcze nie gra */}
             {pendingSong && (
               <button className="big-play-btn" onClick={startPlaying}>
-                Odtwórzzz ▶
+                Odtwórzzzzzz ▶
               </button>
             )}
 
