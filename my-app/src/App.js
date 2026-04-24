@@ -121,7 +121,7 @@ function App() {
             {/* Przycisk Odtwórz – widoczny tylko gdy jeszcze nie gra */}
             {pendingSong && (
               <button className="big-play-btn" onClick={startPlaying}>
-                Odtwórz ▶
+                Odtwórzzz ▶
               </button>
             )}
 
