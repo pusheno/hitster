@@ -36,6 +36,7 @@ function App() {
     }
 
     const songs = {
+    song1: "https://www.dropbox.com/scl/fi/kqnjc4mkwiah8o2n631km/song1.mp3?raw=1",
     song321: "https://www.dropbox.com/scl/fi/p514t4jpshw1qum1ggyqq/song321.mp3?raw=1",
     song323: "https://www.dropbox.com/scl/fi/bu18q2qkq2vdixe70liyt/song323.mp3?raw=1",
     };
@@ -120,7 +121,7 @@ function App() {
             {/* Przycisk Odtwórz – widoczny tylko gdy jeszcze nie gra */}
             {pendingSong && (
               <button className="big-play-btn" onClick={startPlaying}>
-                Odtwórz ▶
+                Odtwórz1 ▶
               </button>
             )}
 
